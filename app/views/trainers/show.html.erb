@@ -1,26 +1,32 @@
-<h3>Trainer</h3>
-<p>Name: <%= @trainer.name if @trainer.name %></p>
-<p>Email: <%= @trainer.email if @trainer.email %></p> 
-<div class="container">
-  <div class="row">
-    <h3>Pokemon</h3>
-    <div class="column">
-      <table class="table">
-        <tbody>
-          <% Pokemon.all.each do |p| %>
-            <tr>            
-                <% if p.trainer_id == @trainer.id %>
-                    <td> <%= p.name %> </td>
-                    <td> <%= p.level %> </td>
-                    <td> <%= p.health %> </td>
-                    <td>
-                    <%= button_to "Damage!", damage_path(id: p), :class => "button small", :method => :patch %>
-                    </td>
-                <% end %>
-            </tr>
+<h3>Trainer Profile</h3>
+<p><b>Name:</b> <%= @trainer.name if @trainer.name %></p>
+<p><b>Email:</b> <%= @trainer.email if @trainer.email %></p> 
+
+<h5>Pokemon</h5>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>Name</th>
+      <th>Level</th>
+      <th>Health</th>
+      <th>Attack</th>
+    </tr>
+    <% Pokemon.all.each do |p| %>
+      <tr>            
+          <% if p.trainer_id == @trainer.id %>
+              <td> <%= p.name %> </td>
+              <td> <%= p.level %> </td>
+              <td> <%= p.health %> </td>
+              <td>
+              <%= button_to "Damage!", damage_path(id: p), :class => "button small", :method => :patch %>
+              </td>
           <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<% if current_trainer.id == @trainer.id %>
+  <%= button_to "Create a new Pokemon!", new_pokemon_path(id: p), :class => "button small", :method => :get %>
+<% end %>
