@@ -12,7 +12,6 @@ class PokemonsController < ApplicationController
 
     def damage
         @p = Pokemon.find(params[:id])
-        trainer_id = @p.trainer_id
         @p.health -= 10
 
         if @p.health <= 0 
@@ -27,7 +26,6 @@ class PokemonsController < ApplicationController
 
     def heal
         @p = Pokemon.find(params[:id])
-        trainer_id = @p.trainer_id
         @p.health += 10
 
         if @p.health > 0
@@ -38,7 +36,7 @@ class PokemonsController < ApplicationController
         end
         @p.save!
 
-        redirect_to "/trainers/" + trainer_id.to_s
+        redirect_to "/trainers/" + @p.trainer_id.to_s
     end
 
     def new
