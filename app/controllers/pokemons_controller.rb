@@ -1,22 +1,42 @@
 class PokemonsController < ApplicationController
 
+    attr_reader :hidden
+
     def capture
-        p = Pokemon.find(params[:id])
-        p.trainer_id = current_trainer.id
-        p.save!
+        @p = Pokemon.find(params[:id])
+        @p.trainer_id = current_trainer.id
+        @p.save!
 
         redirect_to "/"
     end
 
     def damage
-        p = Pokemon.find(params[:id])
-        trainer_id = p.trainer_id
-        p.health -= 10
+        @p = Pokemon.find(params[:id])
+        trainer_id = @p.trainer_id
+        @p.health -= 10
 
-        if p.health <= 0 
-            Pokemon.destroy(params[:id])
+        if @p.health <= 0 
+            # Pokemon.destroy(params[:id])
+            @p.health = 0
+            @p.hidden = true
         end
-        p.save!
+        @p.save!
+
+        redirect_to "/trainers/" + @p.trainer_id.to_s
+    end
+
+    def heal
+        @p = Pokemon.find(params[:id])
+        trainer_id = @p.trainer_id
+        @p.health += 10
+
+        if @p.health > 0
+            @p.hidden = false
+        end
+        if @p.health > 100
+            @p.health = 100
+        end
+        @p.save!
 
         redirect_to "/trainers/" + trainer_id.to_s
     end
@@ -33,6 +53,7 @@ class PokemonsController < ApplicationController
         if @pokemon.save
             redirect_to "/trainers/" + @pokemon.trainer_id.to_s
         else
+            flash.now[:error] = @pokemon.errors.full_messages.to_sentence
             render "new"
         end
     end

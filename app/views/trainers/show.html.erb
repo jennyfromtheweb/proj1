@@ -3,29 +3,39 @@
 <p><b>Email:</b> <%= @trainer.email if @trainer.email %></p> 
 
 <h5>Pokemon</h5>
+
+<% if @trainer.pokemons.count > 0 %>
 <table class="table">
   <tbody>
     <tr>
       <th>Name</th>
       <th>Level</th>
       <th>Health</th>
-      <th>Attack</th>
     </tr>
     <% Pokemon.all.each do |p| %>
       <tr>            
-          <% if p.trainer_id == @trainer.id %>
+          <% if p.trainer_id == @trainer.id &&
+              (current_trainer.id == p.trainer_id || !p.hidden) %>
               <td> <%= p.name %> </td>
               <td> <%= p.level %> </td>
               <td> <%= p.health %> </td>
               <td>
               <%= button_to "Damage!", damage_path(id: p), :class => "button small", :method => :patch %>
               </td>
+              <% if current_trainer.id == @trainer.id %>
+                <td>
+              <%= button_to "Heal!", heal_path(id: p), :class => "button small", :method => :patch %>
+                </td>
+              <% end %>
           <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
-
+<% else %>
+<%= @trainer.name %> has no Pokemon to display!
+<br>
+<% end %>
 
 <% if current_trainer.id == @trainer.id %>
   <%= button_to "Create a new Pokemon!", new_pokemon_path(id: p), :class => "button small", :method => :get %>

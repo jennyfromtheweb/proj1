@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :pokemons
   patch "capture", to: "pokemons#capture", as: :capture
   patch "damage", to: "pokemons#damage", as: :damage
+  patch "heal", to: "pokemons#heal", as: :heal
 
   get "/pokemons/new", to: "pokemons#new"
   post "pokemons", to: "pokemons#create"
